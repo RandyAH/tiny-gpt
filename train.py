@@ -1,6 +1,11 @@
 import torch
 from model.model import GPT
 from dataset import get_batch
+from torch.cuda.amp import autocast, GradScaler
+
+torch.set_float32_matmul_precision("high")
+
+scaler = GradScaler()
 print("Starting training...")
 # -----------------------------
 # Device
@@ -11,8 +16,8 @@ print(f"Using device: {device}")
 # -----------------------------
 # Hyperparameters
 # -----------------------------
-max_iters = 2000
-eval_interval = 1000
+max_iters = 5000
+eval_interval = 500
 learning_rate = 3e-4
 
 # -----------------------------
@@ -24,7 +29,6 @@ print("Loaded pretrained weights.")
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
-print("Model parameters:", sum(p.numel() for p in model.parameters()))
 
 # -----------------------------
 # Training loop
@@ -37,12 +41,12 @@ for step in range(max_iters):
     y = y.to(device)
 
     # forward
-    logits, loss = model(x, y)
+    with autocast():
+        logits, loss = model(x, y)
 
-    # backward
-    optimizer.zero_grad(set_to_none=True)
-    loss.backward()
-    optimizer.step()
+    scaler.scale(loss).backward()
+    scaler.step(optimizer)
+    scaler.update()
 
     # logging
     if step % eval_interval == 0:

@@ -29,5 +29,3 @@ def decode(l):
 # Convert the whole text to a tensor of integers
 data = torch.tensor(encode(text), dtype=torch.long)
 
-print(len(vocab))    
-print(len(data) == len(text))

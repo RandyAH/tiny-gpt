@@ -54,7 +54,7 @@ def generate(model, idx, max_new_tokens, temperature=0.8, top_k=20):
 # -----------------------------
 # Prompt
 # -----------------------------
-prompt = "Sir,"
+prompt = "ROMEO:"
 idx = torch.tensor([encode(prompt)], dtype=torch.long, device=device)
 
 # -----------------------------

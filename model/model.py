@@ -9,11 +9,11 @@ import torch.nn.functional as F
 
 # Hyperparameters
 vocab_size = len(vocab)
-block_size = 64
-batch_size = 32
-embedding_dim = 128
-num_heads = 4
-num_layers = 4
+block_size = 128
+batch_size = 128
+embedding_dim = 512
+num_heads = 8
+num_layers = 8
 
 
 
